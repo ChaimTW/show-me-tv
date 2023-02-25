@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
-import { shows } from './mockData'
+import { shows } from './mock_data/mockData'
 import BaseShowCard from '../Base/BaseShowCard.vue'
 
 describe('BaseShowCard.vue Test', () => {

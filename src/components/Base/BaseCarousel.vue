@@ -70,9 +70,9 @@ const swiperOptions = ref({
 //   console.log("TODO");
 // }
 
-// function onSwiper() {
-//   console.log("TODO");
-// }
+function onSwiper() {
+  console.log("TODO");
+}
 </script>
 
 <style scoper>
