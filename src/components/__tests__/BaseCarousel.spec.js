@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { shows } from './mockData'
+import { shows } from './mock_data/mockData'
 import BaseShowCarousel from '../Base/BaseCarousel.vue'
 
 describe('BaseShowCarousel.vue Test', () => {
