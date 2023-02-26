@@ -4,11 +4,13 @@ const store = createStore({
   state: {
       allShows: [],
       watchList: [],
-      showsByGenre: []
+      showsByGenre: [],
+      timeStampLastUpdated: null
   },
   mutations: {
     updateAllShows(state, updatedShowsList) {
       state.allShows = updatedShowsList
+      state.timeStampLastUpdated = new Date().getTime()
     },
     addToWatchList(state, show) {
       state.watchList.push(show)
@@ -51,7 +53,15 @@ const store = createStore({
     },
     getWatchList(state) {
       return state.watchList
-    }
+    },
+    getUpdateShowsStore: (state) => (timestamp) => {
+      const timePassed = (timestamp - state.timeStampLastUpdated) / 60000
+      if(timePassed > 1) {
+        return true
+      } else {
+        return false
+      }
+    },
   },
 })
 

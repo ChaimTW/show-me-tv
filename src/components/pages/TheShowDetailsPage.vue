@@ -1,9 +1,14 @@
 <template>
+  <div class="back-button">
+    <router-link :to="'/'">
+      <div class="previous">&laquo; Back</div>
+    </router-link>
+  </div>
   <div class="show-details-container" v-if="!loading">
     <div class="img-wrapper">
       <img :src="imageUrl" alt="" />
     </div>
-    
+
     <div class="information-container">
       <div class="meta-information">
         <div class="star-wrapper">
@@ -30,6 +35,7 @@
           <font-awesome-icon icon="fa-solid fa-star" class="checked" />
         </div>
       </div>
+      <h2>{{ show.name }}</h2>
       <p><strong>Genre:</strong> {{ genresString }}</p>
       <p><strong>Rating:</strong> {{ rating }}</p>
       <p><strong>Language:</strong> {{ language }}</p>
@@ -42,19 +48,19 @@
           @click="addToWatchList"
           :class="{ hidden: showInWatchList == true, addButton: true }"
         >
-          <strong>+ Add to watch list</strong>
+          + Add to watch list
         </button>
         <button
           @click="removeFromWatchList"
-          :class="{ 
+          :class="{
             hidden: showInWatchList == false,
-            add: true
-           }"
+            add: true,
+          }"
         >
-          <strong>- Remove from list</strong>
+          - Remove from list
         </button>
         <a :href="officialSite" target="_blank"
-          ><button><strong>Visit website</strong></button></a
+          ><button>Visit website</button></a
         >
       </div>
     </div>
@@ -94,10 +100,10 @@ const showInWatchList = computed(() => {
   let foundShow = store.getters.getWatchList.find((show) => {
     return show.id === parseInt(props.showId);
   });
-  if(foundShow) {
+  if (foundShow) {
     return true;
   } else {
-    return false
+    return false;
   }
 });
 
@@ -169,7 +175,7 @@ function removeFromWatchList() {
 
 // Lifecycle
 onMounted(async () => {
-  loadShow()
+  loadShow();
 });
 </script>
 
@@ -214,10 +220,10 @@ img {
 }
 
 button {
-  padding: 15px;
-  border-radius: 25px;
+  padding: 8px 14px;
+  border-radius: 5px;
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.9);
   margin-right: 20px;
   margin-bottom: 20px;
   border: 2px solid rgba(255, 55, 70, 0);
@@ -244,7 +250,7 @@ button:hover {
 
 .addButton:hover {
   background-color: rgba(255, 55, 70, 1);
-  color: white
+  color: white;
 }
 
 .spinner-container {
@@ -255,11 +261,33 @@ button:hover {
   justify-content: center;
 }
 
+.previous {
+  background-color: #f1f1f1;
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 3px;
+  margin-left: 52px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+
+.previous:hover {
+  background-color: #ddd;
+  color: black;
+}
+
 @media screen and (max-width: 600px) {
   img {
     width: 272px;
     margin-right: 0px;
     align-self: center;
+  }
+
+  .previous {
+    margin-left: 30px
   }
 
   .show-details-container {
