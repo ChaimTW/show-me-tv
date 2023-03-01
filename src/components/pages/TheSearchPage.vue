@@ -16,7 +16,7 @@
       v-if="!loading"
     ></BaseShowList>
     <div class="spinner-container" v-else>
-      <pulse-loader color="rgba(255, 55, 70, 1)"></pulse-loader>
+      <pulse-loader color="rgb(255, 55, 70)"></pulse-loader>
     </div>
   </div>
 </template>

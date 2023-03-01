@@ -8,7 +8,7 @@
     ></BaseShowList>
   </div>
   <div class="spinner-container" v-else>
-    <pulse-loader color="rgba(255, 55, 70, 1)"></pulse-loader>
+    <pulse-loader color="rgb(255, 55, 70)"></pulse-loader>
   </div>
 </template>
 
@@ -26,7 +26,6 @@ const getUpdateShowsStore = store.getters.getUpdateShowsStore
 // Refs
 const allShows = ref([]);
 const loading = ref(false);
-const updateShowsStore = ref(true)
 
 // Computed
 const allGenres = computed(() => {
@@ -37,11 +36,13 @@ const allGenres = computed(() => {
 async function loadShows() {
   loading.value = true;
 
-  updateShowsStore.value = getUpdateShowsStore(new Date().getTime())
+  const updateShowsStore = getUpdateShowsStore(new Date().getTime())
   
-  if (store.state.allShows.length > 0 && updateShowsStore.value == false) {
+  if (store.state.allShows.length > 0 && !updateShowsStore) {
+    console.log('store');
     allShows.value = store.state.allShows;
   } else {
+    console.log('fetch');
     try {
       const showsList = await getShows(1);
       allShows.value = showsList;
