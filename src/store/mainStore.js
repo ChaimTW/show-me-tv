@@ -56,11 +56,7 @@ const store = createStore({
     },
     getUpdateShowsStore: (state) => (timestamp) => {
       const timePassed = (timestamp - state.timeStampLastUpdated) / 60000
-      if(timePassed > 1) {
-        return true
-      } else {
-        return false
-      }
+      return timePassed > 1
     },
   },
 })

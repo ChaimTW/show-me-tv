@@ -1,12 +1,10 @@
 <template>
   <div class="back-button">
-    <router-link :to="'/'">
-      <div class="previous">&laquo; Back</div>
-    </router-link>
+      <div class="previous" @click="goBack">&laquo; Back</div>
   </div>
   <div class="show-details-container" v-if="!loading">
     <div class="img-wrapper">
-      <img :src="imageUrl" alt="" />
+      <img :src="show?.image?.original" alt="" />
     </div>
 
     <div class="information-container">
@@ -38,11 +36,11 @@
       <h2>{{ show.name }}</h2>
       <p><strong>Genre:</strong> {{ genresString }}</p>
       <p><strong>Rating:</strong> {{ rating }}</p>
-      <p><strong>Language:</strong> {{ language }}</p>
+      <p><strong>Language:</strong> {{ show?.language }}</p>
       <p><strong>Average runtime:</strong> {{ averageRuntime }}</p>
       <p><strong>Network:</strong> {{ network }}</p>
       <br />
-      <p v-html="showSummary"></p>
+      <p v-html="show?.summary"></p>
       <div class="actions">
         <button
           @click="addToWatchList"
@@ -74,9 +72,13 @@
 import { ref, defineProps, onMounted, computed } from "vue";
 import { getShow } from "../../api/getShows";
 import { useStore } from "vuex";
+import { useRouter } from 'vue-router'
 
 // Store
 const store = useStore();
+
+// Router
+const router = useRouter();
 
 // Props
 const props = defineProps({
@@ -85,12 +87,9 @@ const props = defineProps({
 
 // Refs
 const show = ref({});
-const imageUrl = ref("Unknown");
-const showSummary = ref("Unknown");
 const genres = ref([]);
 const rating = ref("Unknown");
 const officialSite = ref("Unknown");
-const language = ref("Unknown");
 const averageRuntime = ref(0);
 const network = ref("Unknown");
 const loading = ref(false);
@@ -100,22 +99,14 @@ const showInWatchList = computed(() => {
   let foundShow = store.getters.getWatchList.find((show) => {
     return show.id === parseInt(props.showId);
   });
-  if (foundShow) {
-    return true;
-  } else {
-    return false;
-  }
+  return typeof foundShow === 'object';
 });
 
 const genresString = computed(() => {
   let tempString = "";
   if (genres.value.length > 0) {
     for (const genre of genres.value) {
-      if (genre === genres.value[genres.value.length - 1]) {
-        tempString += " " + genre;
-      } else {
-        tempString += " " + genre + " |";
-      }
+      genre === genres.value[genres.value.length - 1] ? tempString += " " + genre : tempString += " " + genre + " |";
     }
   } else {
     tempString = "Unknown";
@@ -129,35 +120,13 @@ async function loadShow() {
   try {
     const data = await getShow(props.showId);
     show.value = data;
-    imageUrl.value = data.image.original;
-    showSummary.value = data.summary;
     genres.value = data.genres;
 
-    if (data.rating.average != null) {
-      rating.value = data.rating.average;
-    } else {
-      rating.value = "Unknown";
-    }
+    data.rating.average != null ? rating.value = data.rating.average : rating.value = "Unknown";
+    data.officialSite != null ? officialSite.value = data.officialSite : officialSite.value = "/";
+    data.averageRuntime != null ? averageRuntime.value = data.averageRuntime : averageRuntime.value = "Unknown";
+    data.network != null ? network.value = data.network.name : network.value = "Unknown";
 
-    if (data.officialSite != null) {
-      officialSite.value = data.officialSite;
-    } else {
-      officialSite.value = "/";
-    }
-
-    language.value = data.language;
-
-    if (data.averageRuntime != null) {
-      averageRuntime.value = data.averageRuntime;
-    } else {
-      averageRuntime.value = "Unknown";
-    }
-
-    if (data.network != null) {
-      network.value = data.network.name;
-    } else {
-      network.value = "Unknown";
-    }
   } catch (error) {
     alert(error.message);
   } finally {
@@ -171,6 +140,10 @@ function addToWatchList() {
 
 function removeFromWatchList() {
   store.dispatch("removeFromWatchList", show.value);
+}
+
+function goBack() {
+  router.options.history.state.back != null ? router.back() : router.push('/')
 }
 
 // Lifecycle

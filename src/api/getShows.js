@@ -1,14 +1,14 @@
+const headers = {
+  headers: {
+    Accept: 'application/json',
+  }
+}
+
 export async function getShows(pageParam) {
   const endpoint = 'https://api.tvmaze.com/shows'
   const query = '?page='
   const queryValue = pageParam
   const apiUrl = endpoint + query + queryValue
-
-  const headers = {
-    headers: {
-      Accept: 'application/json',
-    }
-  }
 
   const response = await fetch(apiUrl, headers)
 
@@ -22,12 +22,6 @@ export async function getShows(pageParam) {
 export async function getShow(showId) {
   const endpoint = 'https://api.tvmaze.com/shows/'
   const apiUrl = endpoint + showId
-
-  const headers = {
-    headers: {
-      Accept: 'application/json',
-    }
-  }
 
   const response = await fetch(apiUrl, headers)
 
@@ -43,12 +37,6 @@ export async function searchShows(searchParam) {
   const query = '?q='
   const queryValue = searchParam
   const apiUrl = endpoint + query + queryValue
-
-  const headers = {
-    headers: {
-      Accept: 'application/json',
-    }
-  }
 
   const response = await fetch(apiUrl, headers)
 
