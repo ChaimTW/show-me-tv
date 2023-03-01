@@ -66,9 +66,9 @@ const swiperOptions = ref({
 });
 
 // Methods
-function onSlideChange() {
-  console.log("TODO");
-}
+// function onSlideChange() {
+//   console.log("TODO");
+// }
 
 function onSwiper() {
   console.log("TODO");
