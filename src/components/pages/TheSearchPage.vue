@@ -10,12 +10,14 @@
       />
     </div>
 
-    <BaseShowList
-      title="Results"
-      :shows="shows"
-      v-if="!loading"
-    ></BaseShowList>
-    <div class="spinner-container" v-else>
+    <transition>
+      <BaseShowList
+        :title="listTitle"
+        :shows="shows"
+        v-if="!loading"
+      ></BaseShowList>
+    </transition>
+    <div class="spinner-container" v-if="loading">
       <pulse-loader color="rgb(255, 55, 70)"></pulse-loader>
     </div>
   </div>
@@ -24,7 +26,7 @@
 <script setup>
 import BaseShowList from "../Base/BaseShowList.vue";
 import { searchShows } from "../../api/getShows";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 // Refs
 const shows = ref([]);
@@ -32,9 +34,14 @@ const searchInput = ref("");
 const timeout = ref(null);
 const loading = ref(false);
 
+// Computed
+const listTitle = computed(() => {
+  return shows.value.length > 0 ? "Results" : "";
+});
+
 // Methods
 function search() {
-  loading.value = true
+  loading.value = true;
   clearTimeout(timeout.value);
   timeout.value = setTimeout(async function () {
     try {
@@ -96,6 +103,17 @@ function search() {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(15px)
 }
 
 @media only screen and (max-width: 800px) {

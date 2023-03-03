@@ -1,70 +1,72 @@
 <template>
-  <div class="back-button">
+  <div> 
+    <div class="back-button">
       <div class="previous" @click="goBack">&laquo; Back</div>
-  </div>
-  <div class="show-details-container" v-if="!loading">
-    <div class="img-wrapper">
-      <img :src="show?.image?.original" alt="" />
     </div>
+    <div class="show-details-container" v-if="!loading">
+      <div class="img-wrapper">
+        <img :src="show?.image?.original" alt="" />
+      </div>
 
-    <div class="information-container">
-      <div class="meta-information">
-        <div class="star-wrapper">
-          <font-awesome-icon
-            icon="fa-solid fa-question"
-            v-if="rating === 'Unknown'"
-          />
-          <font-awesome-icon
-            icon="fa-solid fa-star"
-            :class="{ checked: rating > 9 }"
-          />
-          <font-awesome-icon
-            icon="fa-solid fa-star"
-            :class="{ checked: rating > 7 }"
-          />
-          <font-awesome-icon
-            icon="fa-solid fa-star"
-            :class="{ checked: rating > 5 }"
-          />
-          <font-awesome-icon
-            icon="fa-solid fa-star"
-            :class="{ checked: rating > 3 }"
-          />
-          <font-awesome-icon icon="fa-solid fa-star" class="checked" />
+      <div class="information-container">
+        <div class="meta-information">
+          <div class="star-wrapper">
+            <font-awesome-icon
+              icon="fa-solid fa-question"
+              v-if="rating === 'Unknown'"
+            />
+            <font-awesome-icon
+              icon="fa-solid fa-star"
+              :class="{ checked: rating > 9 }"
+            />
+            <font-awesome-icon
+              icon="fa-solid fa-star"
+              :class="{ checked: rating > 7 }"
+            />
+            <font-awesome-icon
+              icon="fa-solid fa-star"
+              :class="{ checked: rating > 5 }"
+            />
+            <font-awesome-icon
+              icon="fa-solid fa-star"
+              :class="{ checked: rating > 3 }"
+            />
+            <font-awesome-icon icon="fa-solid fa-star" class="checked" />
+          </div>
+        </div>
+        <h2>{{ show.name }}</h2>
+        <p><strong>Genre:</strong> {{ genresString }}</p>
+        <p><strong>Rating:</strong> {{ rating }}</p>
+        <p><strong>Language:</strong> {{ show?.language }}</p>
+        <p><strong>Average runtime:</strong> {{ averageRuntime }}</p>
+        <p><strong>Network:</strong> {{ network }}</p>
+        <br />
+        <p v-html="show?.summary"></p>
+        <div class="actions">
+          <button
+            @click="addToWatchList"
+            :class="{ hidden: showInWatchList == true, addButton: true }"
+          >
+            + Add to watch list
+          </button>
+          <button
+            @click="removeFromWatchList"
+            :class="{
+              hidden: showInWatchList == false,
+              add: true,
+            }"
+          >
+            - Remove from list
+          </button>
+          <a :href="officialSite" target="_blank"
+            ><button>Visit website</button></a
+          >
         </div>
       </div>
-      <h2>{{ show.name }}</h2>
-      <p><strong>Genre:</strong> {{ genresString }}</p>
-      <p><strong>Rating:</strong> {{ rating }}</p>
-      <p><strong>Language:</strong> {{ show?.language }}</p>
-      <p><strong>Average runtime:</strong> {{ averageRuntime }}</p>
-      <p><strong>Network:</strong> {{ network }}</p>
-      <br />
-      <p v-html="show?.summary"></p>
-      <div class="actions">
-        <button
-          @click="addToWatchList"
-          :class="{ hidden: showInWatchList == true, addButton: true }"
-        >
-          + Add to watch list
-        </button>
-        <button
-          @click="removeFromWatchList"
-          :class="{
-            hidden: showInWatchList == false,
-            add: true,
-          }"
-        >
-          - Remove from list
-        </button>
-        <a :href="officialSite" target="_blank"
-          ><button>Visit website</button></a
-        >
-      </div>
     </div>
-  </div>
-  <div class="spinner-container" v-else>
-    <pulse-loader color="rgb(255, 55, 70)"></pulse-loader>
+    <div class="spinner-container" v-if="loading">
+      <pulse-loader color="rgb(255, 55, 70)"></pulse-loader>
+    </div>
   </div>
 </template>
 
@@ -72,7 +74,7 @@
 import { ref, defineProps, onMounted, computed } from "vue";
 import { getShow } from "../../api/getShows";
 import { useStore } from "vuex";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 
 // Store
 const store = useStore();
@@ -99,14 +101,16 @@ const showInWatchList = computed(() => {
   let foundShow = store.getters.getWatchList.find((show) => {
     return show.id === parseInt(props.showId);
   });
-  return typeof foundShow === 'object';
+  return typeof foundShow === "object";
 });
 
 const genresString = computed(() => {
   let tempString = "";
   if (genres.value.length > 0) {
     for (const genre of genres.value) {
-      genre === genres.value[genres.value.length - 1] ? tempString += " " + genre : tempString += " " + genre + " |";
+      genre === genres.value[genres.value.length - 1]
+        ? (tempString += " " + genre)
+        : (tempString += " " + genre + " |");
     }
   } else {
     tempString = "Unknown";
@@ -120,13 +124,21 @@ async function loadShow() {
   try {
     const data = await getShow(props.showId);
     show.value = data;
+    console.log(data);
     genres.value = data.genres;
 
-    data.rating.average != null ? rating.value = data.rating.average : rating.value = "Unknown";
-    data.officialSite != null ? officialSite.value = data.officialSite : officialSite.value = "/";
-    data.averageRuntime != null ? averageRuntime.value = data.averageRuntime : averageRuntime.value = "Unknown";
-    data.network != null ? network.value = data.network.name : network.value = "Unknown";
-
+    data.rating.average != null
+      ? (rating.value = data.rating.average)
+      : (rating.value = "Unknown");
+    data.officialSite != null
+      ? (officialSite.value = data.officialSite)
+      : (officialSite.value = "/");
+    data.averageRuntime != null
+      ? (averageRuntime.value = data.averageRuntime)
+      : (averageRuntime.value = "Unknown");
+    data.network != null
+      ? (network.value = data.network.name)
+      : (network.value = "Unknown");
   } catch (error) {
     alert(error.message);
   } finally {
@@ -143,7 +155,7 @@ function removeFromWatchList() {
 }
 
 function goBack() {
-  router.options.history.state.back != null ? router.back() : router.push('/')
+  router.options.history.state.back != null ? router.back() : router.push("/");
 }
 
 // Lifecycle
@@ -161,8 +173,13 @@ onMounted(async () => {
   padding-top: 20px;
 }
 
+.img-wrapper {
+  width: 322px;
+}
+
 img {
-  height: 400px;
+  width: 280px;
+  height: auto;
   margin-right: 50px;
   border-radius: 10px;
   filter: drop-shadow(0px 5px 10px rgba(255, 255, 255, 0.3));
@@ -246,7 +263,6 @@ button:hover {
   font-size: 14px;
 }
 
-
 .previous:hover {
   background-color: #ddd;
   color: black;
@@ -260,7 +276,7 @@ button:hover {
   }
 
   .previous {
-    margin-left: 30px
+    margin-left: 30px;
   }
 
   .show-details-container {

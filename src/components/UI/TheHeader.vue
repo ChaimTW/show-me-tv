@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <div class="brand-name">
-      <h2>showmetv.</h2>
+      <h2>ShowMeTv.</h2>
     </div>
     <div class="tabs-container">
       <router-link to="/">
