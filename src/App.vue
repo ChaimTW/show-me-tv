@@ -2,7 +2,12 @@
   <div class="app-container">
     <TheHeader></TheHeader>
     <div class="content-container">
-      <router-view></router-view>
+      
+        <router-view v-slot="slotProps">
+          <transition name="route">
+            <component :is="slotProps.Component"></component>
+          </transition>
+        </router-view>
     </div>
   </div>
 </template>
@@ -28,6 +33,20 @@ app-container {
 
 .content-container {
   margin-top: 100px;
+}
+
+.route-enter-from {
+  opacity: 0;
+  transform: translateY(15px)
+}
+
+.route-enter-active {
+  transition: all 0.5s ease;
+}
+
+.route-enter-to {
+  opacity: 1;
+  transform: translateY(0px)
 }
 
 @media only screen and (max-width: 800px) {

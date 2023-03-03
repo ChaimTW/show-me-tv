@@ -1,4 +1,5 @@
 <template>
+  <Transition>
   <div class="homepage-container" v-if="!loading">
     <BaseShowList
       v-for="genre in allGenres"
@@ -7,7 +8,8 @@
       :shows="showsByGenreGetter(genre)"
     ></BaseShowList>
   </div>
-  <div class="spinner-container" v-else>
+  </Transition>
+  <div class="spinner-container" v-if="loading">
     <pulse-loader color="rgb(255, 55, 70)"></pulse-loader>
   </div>
 </template>
@@ -74,5 +76,16 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(15px)
 }
 </style>
