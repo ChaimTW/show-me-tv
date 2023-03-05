@@ -11,27 +11,7 @@
       <div class="information-container">
         <div class="meta-information">
           <div class="star-wrapper">
-            <font-awesome-icon
-              icon="fa-solid fa-question"
-              v-if="rating === 'Unknown'"
-            />
-            <font-awesome-icon
-              icon="fa-solid fa-star"
-              :class="{ checked: rating > 9 }"
-            />
-            <font-awesome-icon
-              icon="fa-solid fa-star"
-              :class="{ checked: rating > 7 }"
-            />
-            <font-awesome-icon
-              icon="fa-solid fa-star"
-              :class="{ checked: rating > 5 }"
-            />
-            <font-awesome-icon
-              icon="fa-solid fa-star"
-              :class="{ checked: rating > 3 }"
-            />
-            <font-awesome-icon icon="fa-solid fa-star" class="checked" />
+            <BaseRatingStars :rating="rating" />
           </div>
         </div>
         <h2>{{ show.name }}</h2>
@@ -51,16 +31,13 @@
           </button>
           <button
             @click="removeFromWatchList"
-            :class="{
-              hidden: showInWatchList == false,
-              add: true,
-            }"
+            :class="{ hidden: showInWatchList == false, add: true }"
           >
             - Remove from list
           </button>
-          <a :href="officialSite" target="_blank"
-            ><button>Visit website</button></a
-          >
+          <a :href="officialSite" target="_blank">
+            <button>Visit website</button>
+          </a>
         </div>
       </div>
     </div>
@@ -72,6 +49,7 @@
 
 <script setup>
 import { ref, defineProps, onMounted, computed } from "vue";
+import BaseRatingStars from '../Base/BaseRatingStars.vue'
 import { getShow } from "../../api/getShows";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -98,24 +76,13 @@ const loading = ref(false);
 
 // Computed
 const showInWatchList = computed(() => {
-  let foundShow = store.getters.getWatchList.find((show) => {
+  return store.getters.getWatchList.some((show) => {
     return show.id === parseInt(props.showId);
   });
-  return typeof foundShow === "object";
 });
 
 const genresString = computed(() => {
-  let tempString = "";
-  if (genres.value.length > 0) {
-    for (const genre of genres.value) {
-      genre === genres.value[genres.value.length - 1]
-        ? (tempString += " " + genre)
-        : (tempString += " " + genre + " |");
-    }
-  } else {
-    tempString = "Unknown";
-  }
-  return tempString;
+  return genres.value.length === 0 ? "Unknown" : genres.value.join(" | ");
 });
 
 // Methods
@@ -124,7 +91,6 @@ async function loadShow() {
   try {
     const data = await getShow(props.showId);
     show.value = data;
-    console.log(data);
     genres.value = data.genres;
 
     data.rating.average != null
@@ -222,10 +188,6 @@ button {
 button:hover {
   color: white;
   background-color: rgb(255, 55, 70);
-}
-
-.checked {
-  color: orange;
 }
 
 .hidden {

@@ -4,37 +4,15 @@
       <h2>ShowMeTv.</h2>
     </div>
     <div class="tabs-container">
-      <router-link to="/">
+      <router-link v-for="tab in tabs" :to="tab.path" :key="tab.name">
         <div
           class="tab-option"
-          @click="selectTab('home')"
-          :class="selectedTab === 'home' ? 'nav-active' : ''"
+          @click="selectTab(tab.name)"
+          :class="selectedTab === tab.name ? 'nav-active' : ''"
         >
-          <font-awesome-icon icon="fa-solid fa-house" size="lg" />
-
-          <p>Home</p>
-        </div>
-      </router-link>
-      <router-link to="/watchlist">
-        <div
-          class="tab-option"
-          @click="selectTab('watchList')"
-          :class="selectedTab === 'watchList' ? 'nav-active' : ''"
-        >
-          <font-awesome-icon icon="fa-solid fa-bookmark" size="lg" />
-
-          <p>My Watchlist</p>
-        </div>
-      </router-link>
-      <router-link to="/search">
-        <div
-          class="tab-option"
-          @click="selectTab('search')"
-          :class="selectedTab === 'search' ? 'nav-active' : ''"
-        >
-          <font-awesome-icon icon="fa-solid fa-magnifying-glass" size="lg" />
-
-          <p>Search</p>
+          <font-awesome-icon :icon="tab.icon" size="lg" />
+          <p>{{ tab.label }}</p>
+          <div class="nav-line" v-if="selectedTab === tab.name"></div>
         </div>
       </router-link>
     </div>
@@ -44,20 +22,14 @@
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import tabs from './headerTabs'
 
-// Computed
 const selectedTab = computed(() => {
-  const route = useRoute();
-  if (route.path == "/watchlist") {
-    return "watchList";
-  } else if (route.path == "/search") {
-    return "search";
-  } else {
-    return "home";
-  }
+  const currentPath = useRoute().path;
+  const tab = tabs.find((t) => t.path === currentPath);
+  return tab ? tab.name : "home";
 });
 
-// Methods
 function selectTab(tabName) {
   selectedTab.value = tabName;
 }

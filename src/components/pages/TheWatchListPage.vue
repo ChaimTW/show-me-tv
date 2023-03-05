@@ -6,24 +6,21 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { onMounted, ref, computed } from "vue";
+import { computed } from "vue";
 import BaseShowList from "../Base/BaseShowList.vue";
 
 // Store
 const store = useStore();
 
 // Refs
-const shows = ref([]);
+const shows = computed(() =>{
+  return store.getters.getWatchList;
+})
 
 // Computed
 const listTitle = computed(() => {
   return shows.value.length > 0 ? "My Watchlist" : "Watchlist empty..."
 })
-
-// Lifecycle
-onMounted(() => {
-  shows.value = store.getters.getWatchList
-});
 </script>
 
 <style scoped>
