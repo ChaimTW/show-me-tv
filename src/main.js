@@ -9,9 +9,17 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import '../public/styles.css'
 
 library.add(fas)
+
+// Create Vue app instance
 const app = createApp(App)
+
+// Plugins
 app.use(store)
 app.use(router)
+
+// Global components
 app.component('pulse-loader', PulseLoader);
 app.component('font-awesome-icon', FontAwesomeIcon)
+
+// Mount Vue app
 app.mount('#app')

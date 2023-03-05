@@ -4,9 +4,7 @@ import { shows } from './mock_data/mockData'
 import BaseShowList from '../Base/BaseShowList.vue'
 
 describe('BaseShowList.vue Test', () => {
-  it('renders the correct values on the screen', () => {
-
-    // render the component
+  describe('with shows', () => {
     const wrapper = mount(BaseShowList, {
       props: {
         title: "Search Results",
@@ -14,16 +12,22 @@ describe('BaseShowList.vue Test', () => {
       }
     })
 
-    // check that multiple cards are rendered
-    expect(wrapper.html()).toContain('Search Results')
-    expect(wrapper.html()).toContain('Person of Interest')
-    expect(wrapper.html()).toContain('Under the Sun')
-    expect(wrapper.findAll('.swiper-slide').at(1).exists()).toBe(true);
+    it('renders the correct title', () => {
+      expect(wrapper.find('.title').text()).toBe('Search Results')
+    })
+
+    it('renders the correct number of shows', () => {
+      expect(wrapper.findAll('.swiper-slide').length).toBe(shows.length)
+    })
+
+    it('renders show titles', () => {
+      shows.forEach(show => {
+        expect(wrapper.html()).toContain(show.title)
+      })
+    })
   })
 
-  it('renders doest not break if there are no shows provided', () => {
-
-    // render the component
+  describe('with no shows', () => {
     const wrapper = mount(BaseShowList, {
       props: {
         title: "Search Results",
@@ -31,8 +35,12 @@ describe('BaseShowList.vue Test', () => {
       }
     })
 
-    // check that multiple cards are rendered
-    expect(wrapper.html()).toContain('Search Results')
-    expect(wrapper.exists()).toBeTruthy()
+    it('renders the correct title', () => {
+      expect(wrapper.find('.title').text()).toBe('Search Results')
+    })
+
+    it('renders no shows', () => {
+      expect(wrapper.findAll('.swiper-slide').length).toBe(0)
+    })
   })
 })

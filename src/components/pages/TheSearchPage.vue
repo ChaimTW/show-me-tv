@@ -2,6 +2,7 @@
   <div class="search-page-container">
     <div class="input-container">
       <input
+        ref="searchInputRef"
         type="text"
         placeholder="Enter search term..."
         class="search-input"
@@ -26,13 +27,14 @@
 <script setup>
 import BaseShowList from "../Base/BaseShowList.vue";
 import { searchShows } from "../../api/getShows";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 
 // Refs
 const shows = ref([]);
 const searchInput = ref("");
 const timeout = ref(null);
 const loading = ref(false);
+const searchInputRef = ref(null);
 
 // Computed
 const listTitle = computed(() => {
@@ -43,15 +45,10 @@ const listTitle = computed(() => {
 function search() {
   loading.value = true;
   clearTimeout(timeout.value);
-  timeout.value = setTimeout(async function () {
+  timeout.value = setTimeout(async () => {
     try {
       const searchResults = await searchShows(searchInput.value);
-      let updatedList = [];
-      for (const show of searchResults) {
-        if (show.show.image) {
-          updatedList.push(show.show);
-        }
-      }
+      const updatedList = searchResults.filter(show => show.show.image).map(show => show.show);
       shows.value = updatedList;
     } catch (error) {
       alert(error.message);
@@ -60,7 +57,13 @@ function search() {
     }
   }, 1000);
 }
+
+// Lifecycle hook
+onMounted(() => {
+  searchInputRef.value.focus();
+});
 </script>
+
 
 <style scoped>
 .search-page-container {

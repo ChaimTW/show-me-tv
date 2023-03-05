@@ -6,42 +6,30 @@ import TheHeader from '../UI/TheHeader.vue'
 vi.mock('vue-router')
 
 describe('TheHeader.vue Test', () => {
-  it('triggers all logic when on /watchlist route', async () => {
+  const testRoute = async (path) => {
+    useRoute.mockReturnValue({ path })
 
-    useRoute.mockReturnValue({
-      path: "/watchlist",
-    })
-
-    // render the component
     const wrapper = shallowMount(TheHeader, {})
-
     await wrapper.find('.nav-active').trigger('click')
+
     expect(wrapper.findAll('.nav-active').length).toBe(1)
+  }
+
+  describe('when on /watchlist route', () => {
+    it('triggers all logic', async () => {
+      await testRoute('/watchlist')
+    })
   })
 
-  it('triggers all logic when on /search route', async () => {
-
-    useRoute.mockReturnValue({
-      path: "/search",
+  describe('when on /search route', () => {
+    it('triggers all logic', async () => {
+      await testRoute('/search')
     })
-
-    // render the component
-    const wrapper = shallowMount(TheHeader, {})
-
-    await wrapper.find('.nav-active').trigger('click')
-    expect(wrapper.findAll('.nav-active').length).toBe(1)
   })
 
-  it('triggers all logic when on /home route', async () => {
-
-    useRoute.mockReturnValue({
-      path: "/home",
+  describe('when on /home route', () => {
+    it('triggers all logic', async () => {
+      await testRoute('/home')
     })
-
-    // render the component
-    const wrapper = shallowMount(TheHeader, {})
-
-    await wrapper.find('.nav-active').trigger('click')
-    expect(wrapper.findAll('.nav-active').length).toBe(1)
   })
 })

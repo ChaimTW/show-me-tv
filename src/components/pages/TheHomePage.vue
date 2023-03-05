@@ -41,22 +41,21 @@ async function loadShows() {
   const updateShowsStore = getUpdateShowsStore(new Date().getTime())
   
   if (store.state.allShows.length > 0 && !updateShowsStore) {
-    console.log('store');
     allShows.value = store.state.allShows;
   } else {
-    console.log('fetch');
     try {
       const showsList = await getShows(1);
       allShows.value = showsList;
       store.dispatch("updateAllShows", showsList);
     } catch (error) {
       alert(error.message);
-    } finally {
       loading.value = false;
+      return;
     }
   }
   loading.value = false;
 }
+
 
 // Lifecycle
 onMounted(async () => {

@@ -2,7 +2,6 @@
   <div class="app-container">
     <TheHeader></TheHeader>
     <div class="content-container">
-      
         <router-view v-slot="slotProps">
           <transition name="route">
             <component :is="slotProps.Component"></component>
@@ -28,7 +27,7 @@ import TheHeader from "./components/UI/TheHeader.vue";
 
 app-container {
   width: 100vh;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .content-container {

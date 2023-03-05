@@ -15,12 +15,11 @@ const store = createStore({
     addToWatchList(state, show) {
       state.watchList.push(show)
     },
-    removeFromWatchList(state, showToRemove) {
-      const updatedWatchList = state.watchList.filter(show => {
-        return show.id != parseInt(showToRemove.id)
-      })
+    removeFromWatchList(state, { id }) {
+      const updatedWatchList = state.watchList.filter(show => show.id !== id)
       state.watchList = updatedWatchList
     }
+    
   },
   actions: {
     updateAllShows(context, updatedShowsList) {
@@ -35,21 +34,14 @@ const store = createStore({
   },
   getters: {
     getShowsByGenre: (state) => (genre) => {
-      let showsByGenre = state.allShows.filter(show => {
-        return show.genres.includes(genre)
-      })
-      return showsByGenre;
-    },
+      return state.allShows.filter(show => show.genres.includes(genre))
+    }
+    ,
     getAllGenres(state) {
-      let allGenres = []
-      for(const show of state.allShows){
-        for(const genre of show.genres){
-          if(!allGenres.includes(genre)){
-            allGenres.push(genre)
-          }
-        }
-      }
-      return allGenres
+      const allGenresSet = new Set(
+        state.allShows.flatMap(show => show.genres)
+      );
+      return Array.from(allGenresSet);
     },
     getWatchList(state) {
       return state.watchList
