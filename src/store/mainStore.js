@@ -4,7 +4,6 @@ const store = createStore({
   state: {
       shows: [],
       watchList: [],
-      showsByGenre: [],
       lastUpdated: null
   },
   mutations: {
