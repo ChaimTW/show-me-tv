@@ -7,7 +7,6 @@
       <router-link v-for="tab in tabs" :to="tab.path" :key="tab.name">
         <div
           class="tab-option"
-          @click="selectTab(tab.name)"
           :class="selectedTab === tab.name ? 'nav-active' : ''"
         >
           <font-awesome-icon :icon="tab.icon" size="lg" />
@@ -28,10 +27,6 @@ const selectedTab = computed(() => {
   const tab = tabs.find((t) => t.path === useRoute().path);
   return tab?.name || "home";
 });
-
-function selectTab(tabName) {
-  selectedTab.value = tabName;
-}
 </script>
 
 <style scoped>
