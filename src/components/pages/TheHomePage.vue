@@ -23,10 +23,10 @@ import { useStore } from "vuex";
 // Store
 const store = useStore();
 const showsByGenreGetter = store.getters.getShowsByGenre;
-const getUpdateShowsStore = store.getters.getUpdateShowsStore
+const getUpdateShowsStore = store.getters.shouldUpdateShows
 
 // Refs
-const allShows = ref([]);
+const shows = ref([]);
 const loading = ref(false);
 
 // Computed
@@ -40,13 +40,13 @@ async function loadShows() {
 
   const updateShowsStore = getUpdateShowsStore(new Date().getTime())
   
-  if (store.state.allShows.length > 0 && !updateShowsStore) {
-    allShows.value = store.state.allShows;
+  if (store.state.shows.length > 0 && !updateShowsStore) {
+    shows.value = store.state.shows;
   } else {
     try {
       const showsList = await getShows(1);
-      allShows.value = showsList;
-      store.dispatch("updateAllShows", showsList);
+      shows.value = showsList;
+      store.dispatch("updateShows", showsList);
     } catch (error) {
       alert(error.message);
       loading.value = false;

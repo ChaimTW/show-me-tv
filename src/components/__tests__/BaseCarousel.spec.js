@@ -4,19 +4,20 @@ import { shows } from './mock_data/mockData'
 import BaseShowCarousel from '../Base/BaseCarousel.vue'
 
 describe('BaseShowCarousel.vue Test', () => {
-  it('renders the correct values on the screen', () => {
+  const wrapper = mount(BaseShowCarousel, {
+    props: {
+      title: "Search Results",
+      shows: shows
+    }
+  })
 
-    // render the component
-    const wrapper = mount(BaseShowCarousel, {
-      props: {
-        title: "Search Results",
-        shows: shows
-      }
+  it('renders show titles', () => {
+    shows.forEach(show => {
+      expect(wrapper.html()).toContain(show.name)
     })
+  })
 
-    // check that multiple cards are rendered
-    expect(wrapper.html()).toContain('Person of Interest')
-    expect(wrapper.html()).toContain('Under the Sun')
+  it('renders a swiper slide component', () => {
     expect(wrapper.findAll('.swiper-slide').at(1).exists()).toBe(true);
   })
 })

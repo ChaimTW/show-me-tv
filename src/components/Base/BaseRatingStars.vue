@@ -20,7 +20,10 @@
       icon="fa-solid fa-star"
       :class="{ checked: props.rating > 3 }"
     />
-    <font-awesome-icon icon="fa-solid fa-star" class="checked" />
+    <font-awesome-icon
+      icon="fa-solid fa-star"
+      :class="{ checked: props.rating > 0 }"
+    />
   </div>
 </template>
 
