@@ -13,7 +13,7 @@ describe('BaseShowList.vue Test', () => {
     })
 
     it('renders the correct title', () => {
-      expect(wrapper.find('.title').text()).toBe('Search Results')
+      expect(wrapper.find('h2').text()).toBe('Search Results')
     })
 
     it('renders the correct number of shows', () => {
@@ -22,7 +22,7 @@ describe('BaseShowList.vue Test', () => {
 
     it('renders show titles', () => {
       shows.forEach(show => {
-        expect(wrapper.html()).toContain(show.title)
+        expect(wrapper.html()).toContain(show.name)
       })
     })
   })
@@ -36,7 +36,7 @@ describe('BaseShowList.vue Test', () => {
     })
 
     it('renders the correct title', () => {
-      expect(wrapper.find('.title').text()).toBe('Search Results')
+      expect(wrapper.find('h2').text()).toBe('Search Results')
     })
 
     it('renders no shows', () => {

@@ -2,52 +2,49 @@ import { createStore } from 'vuex'
 
 const store = createStore({
   state: {
-      allShows: [],
+      shows: [],
       watchList: [],
       showsByGenre: [],
-      timeStampLastUpdated: null
+      lastUpdated: null
   },
   mutations: {
-    updateAllShows(state, updatedShowsList) {
-      state.allShows = updatedShowsList
-      state.timeStampLastUpdated = new Date().getTime()
+    setShows(state, updatedShowsList) {
+      state.shows = updatedShowsList
+      state.lastUpdated = new Date().getTime()
     },
-    addToWatchList(state, show) {
+    addShowToWatchList(state, show) {
       state.watchList.push(show)
     },
-    removeFromWatchList(state, { id }) {
+    removeShowFromWatchList(state, { id }) {
       const updatedWatchList = state.watchList.filter(show => show.id !== id)
       state.watchList = updatedWatchList
     }
     
   },
   actions: {
-    updateAllShows(context, updatedShowsList) {
-      context.commit('updateAllShows', updatedShowsList)
+    updateShows(context, updatedShowsList) {
+      context.commit('setShows', updatedShowsList)
     },
-    addToWatchList(context, show) {
-      context.commit('addToWatchList', show)
+    addShowToWatchList(context, show) {
+      context.commit('addShowToWatchList', show)
     },
-    removeFromWatchList(context, show) {
-      context.commit('removeFromWatchList', show)
+    removeShowFromWatchList(context, show) {
+      context.commit('removeShowFromWatchList', show)
     }
   },
   getters: {
     getShowsByGenre: (state) => (genre) => {
-      return state.allShows.filter(show => show.genres.includes(genre))
-    }
-    ,
+      return state.shows.filter(show => show.genres.includes(genre))
+    },
     getAllGenres(state) {
-      const allGenresSet = new Set(
-        state.allShows.flatMap(show => show.genres)
-      );
-      return Array.from(allGenresSet);
+      const allGenresSet = new Set(state.shows.flatMap(show => show.genres))
+      return Array.from(allGenresSet)
     },
     getWatchList(state) {
       return state.watchList
     },
-    getUpdateShowsStore: (state) => (timestamp) => {
-      const timePassed = (timestamp - state.timeStampLastUpdated) / 60000
+    shouldUpdateShows: (state) => (timestamp) => {
+      const timePassed = (timestamp - state.lastUpdated) / 60000
       return timePassed > 1
     },
   },

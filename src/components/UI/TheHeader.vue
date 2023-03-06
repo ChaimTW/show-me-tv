@@ -25,9 +25,8 @@ import { useRoute } from "vue-router";
 import tabs from './headerTabs'
 
 const selectedTab = computed(() => {
-  const currentPath = useRoute().path;
-  const tab = tabs.find((t) => t.path === currentPath);
-  return tab ? tab.name : "home";
+  const tab = tabs.find((t) => t.path === useRoute().path);
+  return tab?.name || "home";
 });
 
 function selectTab(tabName) {

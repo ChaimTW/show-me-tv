@@ -19,7 +19,7 @@ const shows = computed(() =>{
 
 // Computed
 const listTitle = computed(() => {
-  return shows.value.length > 0 ? "My Watchlist" : "Watchlist empty..."
+  return shows?.value.length > 0 ? "My Watchlist" : "Watchlist empty..."
 })
 </script>
 

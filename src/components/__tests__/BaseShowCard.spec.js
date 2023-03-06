@@ -13,11 +13,18 @@ describe('BaseShowCard.vue Test', () => {
       }
     })
 
-    // check that the title is rendered
-    expect(wrapper.html()).toContain('Person of Interest')
-    expect(wrapper.html()).toContain('Action')
-    expect(wrapper.html()).toContain('Crime')
-    expect(wrapper.html()).toContain('Science-Fiction')
-    expect(wrapper.find('img').exists()).toBe(true)
+    it('renders the correct show title', () => {
+      expect(wrapper.html()).toContain(shows[1].name)
+    })
+    
+    it('renders show genres', () => {
+      shows[1].genres.forEach(genre => {
+        expect(wrapper.html()).toContain(genre)
+      })
+    })
+
+    it('renders the show image', () => {
+      expect(wrapper.find('img').exists()).toBe(true)
+    })
   })
 })

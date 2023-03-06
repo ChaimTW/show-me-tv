@@ -64,7 +64,6 @@ onMounted(() => {
 });
 </script>
 
-
 <style scoped>
 .search-page-container {
   color: white;

@@ -1,5 +1,5 @@
 <template>
-  <div> 
+  <div id="transition-container"> 
     <div class="back-button">
       <div class="previous" @click="goBack">&laquo; Back</div>
     </div>
@@ -11,15 +11,15 @@
       <div class="information-container">
         <div class="meta-information">
           <div class="star-wrapper">
-            <BaseRatingStars :rating="rating" />
+            <BaseRatingStars :rating="show?.rating?.average || 'Unknown'" />
           </div>
         </div>
-        <h2>{{ show.name }}</h2>
-        <p><strong>Genre:</strong> {{ genresString }}</p>
-        <p><strong>Rating:</strong> {{ rating }}</p>
-        <p><strong>Language:</strong> {{ show?.language }}</p>
-        <p><strong>Average runtime:</strong> {{ averageRuntime }}</p>
-        <p><strong>Network:</strong> {{ network }}</p>
+        <h2>{{ show?.name || 'Title unknown' }}</h2>
+        <p><strong>Genre:</strong> {{ show?.genres?.join(" | ") || 'Unknown' }}</p>
+        <p><strong>Rating:</strong> {{ show?.rating?.average || 'Unknown' }}</p>
+        <p><strong>Language:</strong> {{ show?.language || 'Unknown' }}</p>
+        <p><strong>Average runtime:</strong> {{ show?.averageRuntime + " minutes" || 'Unknown' }}</p>
+        <p><strong>Network:</strong> {{ show?.network?.name || 'Unknown' }}</p>
         <br />
         <p v-html="show?.summary"></p>
         <div class="actions">
@@ -35,7 +35,7 @@
           >
             - Remove from list
           </button>
-          <a :href="officialSite" target="_blank">
+          <a :href="show?.officialSite || '/'" target="_blank">
             <button>Visit website</button>
           </a>
         </div>
@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onMounted, computed } from "vue";
+import { ref, defineProps, onMounted, computed, reactive } from "vue";
 import BaseRatingStars from '../Base/BaseRatingStars.vue'
 import { getShow } from "../../api/getShows";
 import { useStore } from "vuex";
@@ -66,12 +66,7 @@ const props = defineProps({
 });
 
 // Refs
-const show = ref({});
-const genres = ref([]);
-const rating = ref("Unknown");
-const officialSite = ref("Unknown");
-const averageRuntime = ref(0);
-const network = ref("Unknown");
+const show = reactive({});
 const loading = ref(false);
 
 // Computed
@@ -81,30 +76,12 @@ const showInWatchList = computed(() => {
   });
 });
 
-const genresString = computed(() => {
-  return genres.value.length === 0 ? "Unknown" : genres.value.join(" | ");
-});
-
 // Methods
 async function loadShow() {
   loading.value = true;
   try {
     const data = await getShow(props.showId);
-    show.value = data;
-    genres.value = data.genres;
-
-    data.rating.average != null
-      ? (rating.value = data.rating.average)
-      : (rating.value = "Unknown");
-    data.officialSite != null
-      ? (officialSite.value = data.officialSite)
-      : (officialSite.value = "/");
-    data.averageRuntime != null
-      ? (averageRuntime.value = data.averageRuntime)
-      : (averageRuntime.value = "Unknown");
-    data.network != null
-      ? (network.value = data.network.name)
-      : (network.value = "Unknown");
+    Object.assign(show, data)
   } catch (error) {
     alert(error.message);
   } finally {
@@ -113,11 +90,11 @@ async function loadShow() {
 }
 
 function addToWatchList() {
-  store.dispatch("addToWatchList", show.value);
+  store.dispatch("addShowToWatchList", show);
 }
 
 function removeFromWatchList() {
-  store.dispatch("removeFromWatchList", show.value);
+  store.dispatch("removeShowFromWatchList", show);
 }
 
 function goBack() {
