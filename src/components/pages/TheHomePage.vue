@@ -5,7 +5,7 @@
       v-for="genre in allGenres"
       :key="genre"
       :title="genre"
-      :shows="showsByGenreGetter(genre)"
+      :shows="getShowsByGenre(genre)"
     ></BaseShowList>
   </div>
   </Transition>
@@ -22,8 +22,8 @@ import { useStore } from "vuex";
 
 // Store
 const store = useStore();
-const showsByGenreGetter = store.getters.getShowsByGenre;
-const getUpdateShowsStore = store.getters.shouldUpdateShows
+const getShowsByGenre = store.getters.getShowsByGenre;
+const shouldUpdateShows = store.getters.shouldUpdateShows
 
 // Refs
 const shows = ref([]);
@@ -38,7 +38,7 @@ const allGenres = computed(() => {
 async function loadShows() {
   loading.value = true;
 
-  const updateShowsStore = getUpdateShowsStore(new Date().getTime())
+  const updateShowsStore = shouldUpdateShows(new Date().getTime())
   
   if (store.state.shows.length > 0 && !updateShowsStore) {
     shows.value = store.state.shows;
