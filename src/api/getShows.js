@@ -7,7 +7,7 @@ export async function getShows(pageParam) {
   const queryParams = new URLSearchParams({ page: pageParam });
   const apiUrl = `${endpoint}?${queryParams}`;
 
-  const response = await fetch(apiUrl, { headers });
+  const response = await fetch(apiUrl, headers);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch shows: ${response.statusText}`);
@@ -20,7 +20,7 @@ export async function getShow(showId) {
   const endpoint = 'https://api.tvmaze.com/shows/';
   const apiUrl = `${endpoint}${showId}`;
 
-  const response = await fetch(apiUrl, { headers });
+  const response = await fetch(apiUrl, headers);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch show: ${response.statusText}`);
@@ -34,7 +34,7 @@ export async function searchShows(searchParam) {
   const queryParams = new URLSearchParams({ q: searchParam });
   const apiUrl = `${endpoint}?${queryParams}`;
 
-  const response = await fetch(apiUrl, { headers });
+  const response = await fetch(apiUrl, headers);
 
   if (!response.ok) {
     throw new Error(`Failed to search shows: ${response.statusText}`);
